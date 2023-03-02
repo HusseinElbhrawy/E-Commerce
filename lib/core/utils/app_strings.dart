@@ -4,4 +4,7 @@ class AppStrings {
   factory AppStrings() => _instance;
 
   static const appName = 'E Commerce';
+
+  static const String contentType = 'Content-Type';
+  static const String applicationJson = 'application/json';
 }
