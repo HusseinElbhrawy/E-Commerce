@@ -35,19 +35,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         AuthRepositoryImplementation(authRemoteDataSource);
 
     final LoginWithEmailAndPasswordUseCase loginWithEmailAndPasswordUseCase =
-        LoginWithEmailAndPasswordUseCase(
-      authRepository,
-    );
+        LoginWithEmailAndPasswordUseCase(authRepository);
 
     emit(LoginWithEmailAndPasswordLoading());
 
-    final result =
-        await loginWithEmailAndPasswordUseCase.loginWithEmailAndPasswordUseCase(
+    final result = await loginWithEmailAndPasswordUseCase(
       LoginParams(email: email, password: password),
     );
 
-    log(result.toString());
-
-    emit(LoginWithEmailAndPasswordLoaded());
+    emit(
+      result.fold(
+        (failure) {
+          log(failure.toString());
+          return LoginWithEmailAndPasswordError(failure.message.toString());
+        },
+        (response) {
+          log(response.toString());
+          return LoginWithEmailAndPasswordLoaded();
+        },
+      ),
+    );
   }
 }

@@ -14,7 +14,10 @@ class AuthRemoteDataSourceImplementationWithApi extends AuthRemoteDataSource {
 
   @override
   Future<LoginModel> loginWithEmailAndPassword(LoginParams login) async {
-    final response = await dioConsumer.post(EndPoint.login);
+    final response = await dioConsumer.post(
+      EndPoint.login,
+      body: login.toMap(),
+    );
     return LoginModel.fromJson(response.data);
   }
 }

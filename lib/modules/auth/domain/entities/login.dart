@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 class Login extends Equatable {
   final bool status;
   final String message;
-  final LoginData data;
+  final LoginData? data;
 
   const Login({
     required this.status,

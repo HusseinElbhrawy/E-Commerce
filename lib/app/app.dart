@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/utils/app_strings.dart';
+import '../modules/auth/presentation/bloc/auth_bloc.dart';
+import '../modules/auth/presentation/screens/login_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp._internal();
@@ -15,24 +18,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'App Title',
-          style: TextStyle(
-            fontFamily: '',
-          ),
-        ),
+      home: BlocProvider(
+        create: (context) => AuthBloc(),
+        child: const LoginScreen(),
       ),
     );
   }

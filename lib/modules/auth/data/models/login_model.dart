@@ -35,7 +35,9 @@ class LoginModel extends Login {
     return LoginModel(
       status: map['status'] as bool,
       message: map['message'] as String,
-      data: LoginDataModel.fromMap(map['data'] as Map<String, dynamic>),
+      data: map['data'] != null
+          ? LoginDataModel.fromMap(map['data'] as Map<String, dynamic>)
+          : null,
     );
   }
 
