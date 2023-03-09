@@ -2,13 +2,10 @@
 
 import 'dart:developer';
 
-import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
+import 'package:e_commerce_project/modules/auth/domain/usecases/register_with_email_and_password.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/api/dio_consumer.dart';
-import '../../data/datasources/auth_remote_data_source.dart';
-import '../../data/repositories/auth_repository_implementation.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/usecases/login_with_email_and_password_use_case.dart';
 
@@ -16,31 +13,28 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitial()) {
+  final LoginWithEmailAndPasswordUseCase loginWithEmailAndPasswordUseCase;
+  final RegisterWithEmailAndPasswordUsecase registerWithEmailAndPasswordUsecase;
+
+  AuthBloc(
+    this.loginWithEmailAndPasswordUseCase,
+    this.registerWithEmailAndPasswordUsecase,
+  ) : super(AuthInitial()) {
     on<AuthEvent>((event, emit) {});
     on<LoginWithEmailAndPasswordEvent>((event, emit) {
       return _loginWithEmailAndPassword(event.email, event.password);
     });
+    on<RegisterWithEmailAndPasswordEvent>((event, emit) {
+      return _registerWithEmailAndPassword(
+          event.email, event.password, event.phone, event.name);
+    });
   }
 
   void _loginWithEmailAndPassword(String email, String password) async {
-    final AuthRemoteDataSource authRemoteDataSource =
-        AuthRemoteDataSourceImplementationWithApi(
-      DioConsumer(
-        dio: Dio(),
-      ),
-    );
-
-    final AuthRepository authRepository =
-        AuthRepositoryImplementation(authRemoteDataSource);
-
-    final LoginWithEmailAndPasswordUseCase loginWithEmailAndPasswordUseCase =
-        LoginWithEmailAndPasswordUseCase(authRepository);
-
     emit(LoginWithEmailAndPasswordLoading());
 
     final result = await loginWithEmailAndPasswordUseCase(
-      LoginParams(email: email, password: password),
+      LoginParams(email, password),
     );
 
     emit(
@@ -52,6 +46,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (response) {
           log(response.toString());
           return LoginWithEmailAndPasswordLoaded();
+        },
+      ),
+    );
+  }
+
+  void _registerWithEmailAndPassword(
+    String email,
+    String password,
+    String phone,
+    String name,
+  ) async {
+    final registerParams = RegisterParams(
+      email: email,
+      name: name,
+      password: password,
+      phone: phone,
+    );
+
+    emit(RegisterWithEmailAndPasswordLoading());
+
+    final result = await registerWithEmailAndPasswordUsecase(registerParams);
+    emit(
+      result.fold(
+        (failure) {
+          log(failure.toString());
+          return RegisterWithEmailAndPasswordError(failure.message.toString());
+        },
+        (response) {
+          log(response.toString());
+          return RegisterWithEmailAndPasswordLoaded();
         },
       ),
     );

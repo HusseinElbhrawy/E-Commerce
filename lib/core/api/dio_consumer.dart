@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../app/injector.dart';
 import '../error/exceptions.dart';
 import 'api_consumer.dart';
 import 'app_interceptor.dart';
@@ -10,8 +11,8 @@ class DioConsumer extends ApiConsumer {
   final Dio dio;
 
   DioConsumer({required this.dio}) {
-    dio.interceptors.add(AppInterceptor());
-    if (kDebugMode) dio.interceptors.add(LogInterceptor());
+    dio.interceptors.add(serviceLocator<AppInterceptor>());
+    if (kDebugMode) dio.interceptors.add(serviceLocator<LogInterceptor>());
   }
 
   @override

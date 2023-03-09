@@ -26,3 +26,21 @@ class LoginWithEmailAndPasswordError extends AuthState {
   @override
   List<Object?> get props => [message];
 }
+
+class RegisterWithEmailAndPasswordLoading extends AuthState {
+  @override
+  List<Object?> get props => [];
+}
+
+class RegisterWithEmailAndPasswordLoaded extends AuthState {
+  @override
+  List<Object?> get props => [];
+}
+
+class RegisterWithEmailAndPasswordError extends AuthState {
+  final String message;
+
+  const RegisterWithEmailAndPasswordError(this.message);
+  @override
+  List<Object?> get props => [message];
+}

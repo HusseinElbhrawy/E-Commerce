@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../config/router/app_routes.dart';
+import '../config/themes/dark_theme.dart';
+import '../config/themes/light_theme.dart';
 import '../core/utils/app_strings.dart';
-import '../modules/auth/presentation/bloc/auth_bloc.dart';
-import '../modules/auth/presentation/screens/login_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp._internal();
@@ -15,13 +15,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: AppStrings.appName,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: BlocProvider(
-        create: (context) => AuthBloc(),
-        child: const LoginScreen(),
-      ),
+      theme: kLightTheme,
+      darkTheme: kDarkTheme,
+      themeMode: ThemeMode.light,
+      onGenerateRoute: AppRoutes.onGenerateRoute,
+      initialRoute: Routes.registersRoute,
     );
   }
 }
