@@ -6,6 +6,7 @@ import 'package:e_commerce_project/modules/auth/domain/usecases/register_with_em
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/utils/enums.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/usecases/login_with_email_and_password_use_case.dart';
 
@@ -19,7 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(
     this.loginWithEmailAndPasswordUseCase,
     this.registerWithEmailAndPasswordUsecase,
-  ) : super(AuthInitial()) {
+  ) : super(const AuthState()) {
     on<AuthEvent>((event, emit) {});
     on<LoginWithEmailAndPasswordEvent>((event, emit) {
       return _loginWithEmailAndPassword(event.email, event.password);
@@ -31,7 +32,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _loginWithEmailAndPassword(String email, String password) async {
-    emit(LoginWithEmailAndPasswordLoading());
+    // emit(LoginWithEmailAndPasswordLoading());
+    emit(state.copyWith(loginState: RequestState.loading));
 
     final result = await loginWithEmailAndPasswordUseCase(
       LoginParams(email, password),
@@ -41,11 +43,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       result.fold(
         (failure) {
           log(failure.toString());
-          return LoginWithEmailAndPasswordError(failure.message.toString());
+          return state.copyWith(
+            loginState: RequestState.error,
+            loginErrorMessage: failure.message.toString(),
+          );
+          // return LoginWithEmailAndPasswordError(failure.message.toString());
         },
         (response) {
           log(response.toString());
-          return LoginWithEmailAndPasswordLoaded();
+          return state.copyWith(loginState: RequestState.loaded);
+          // return LoginWithEmailAndPasswordLoaded();
         },
       ),
     );
@@ -64,18 +71,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       phone: phone,
     );
 
-    emit(RegisterWithEmailAndPasswordLoading());
+    // emit(RegisterWithEmailAndPasswordLoading());
+    emit(state.copyWith(registerState: RequestState.loading));
 
     final result = await registerWithEmailAndPasswordUsecase(registerParams);
     emit(
       result.fold(
         (failure) {
           log(failure.toString());
-          return RegisterWithEmailAndPasswordError(failure.message.toString());
+          return state.copyWith(
+            registerState: RequestState.error,
+            registerErrorMessage: failure.message.toString(),
+          );
+          // return RegisterWithEmailAndPasswordError(failure.message.toString());
         },
         (response) {
           log(response.toString());
-          return RegisterWithEmailAndPasswordLoaded();
+          // return RegisterWithEmailAndPasswordLoaded();
+          return state.copyWith(registerState: RequestState.loaded);
         },
       ),
     );

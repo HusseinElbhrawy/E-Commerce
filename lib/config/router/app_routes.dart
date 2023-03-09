@@ -6,12 +6,15 @@ import '../../core/utils/app_strings.dart';
 import '../../modules/auth/presentation/bloc/auth_bloc.dart';
 import '../../modules/auth/presentation/screens/login_screen.dart';
 import '../../modules/auth/presentation/screens/register_screen.dart';
+import '../../modules/home/presentation/bloc/home_bloc.dart';
+import '../../modules/home/presentation/screens/home_screen.dart';
 
 class Routes {
   static const String splashRoute = '/';
   static const String onboardingRoute = '/onboarding';
   static const String loginRoute = '/login';
   static const String registersRoute = '/registers';
+  static const String homeRoute = '/home';
   // static const String forgetPasswordRoute = '/forgetPassword';
   // static const String storeDetailsRoute = '/storeDetails';
 }
@@ -39,6 +42,14 @@ class AppRoutes {
           builder: (_) => BlocProvider.value(
             value: serviceLocator<AuthBloc>(),
             child: const RegisterScreen(),
+          ),
+        );
+      case Routes.homeRoute:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) =>
+                serviceLocator<HomeBloc>()..add(GetHomeDateEvent()),
+            child: const HomeScreen(),
           ),
         );
       // case Routes.forgetPasswordRoute:

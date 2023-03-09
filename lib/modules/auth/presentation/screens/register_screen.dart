@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/constant.dart';
+import '../../../../core/utils/enums.dart';
 import '../../../../core/widgets/big_text_widget.dart';
 import '../../../../core/widgets/small_text_widget.dart';
 import '../bloc/auth_bloc.dart';
@@ -154,12 +155,12 @@ class RegisterButtonWidget extends StatelessWidget {
     return BlocConsumer<AuthBloc, AuthState>(
       buildWhen: (previous, current) => previous != current,
       listener: (context, state) {
-        if (state is RegisterWithEmailAndPasswordError) {
+        if (state.registerState == RequestState.error) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,
               content: SmallTextWidget(
-                state.message,
+                state.registerErrorMessage,
                 maxLines: null,
                 overflow: TextOverflow.visible,
               ),
@@ -169,15 +170,27 @@ class RegisterButtonWidget extends StatelessWidget {
       },
       builder: (context, state) {
         log(state.toString());
-        if (state is RegisterWithEmailAndPasswordLoading) {
-          return const Center(
-            child: CircularProgressIndicator.adaptive(),
-          );
+        switch (state.registerState) {
+          case RequestState.loading:
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          case RequestState.loaded:
+          case RequestState.error:
+            return ElevatedButton(
+              onPressed: onTap,
+              child: const SmallTextWidget('Register'),
+            );
         }
-        return ElevatedButton(
-          onPressed: onTap,
-          child: const SmallTextWidget('Register'),
-        );
+        // if (state is RegisterWithEmailAndPasswordLoading) {
+        //   return const Center(
+        //     child: CircularProgressIndicator.adaptive(),
+        //   );
+        // }
+        // return ElevatedButton(
+        //   onPressed: onTap,
+        //   child: const SmallTextWidget('Register'),
+        // );
       },
     );
   }

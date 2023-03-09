@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/utils/constant.dart';
 import '../../../../../core/widgets/small_text_widget.dart';
+import '../../../../core/utils/enums.dart';
 import '../bloc/auth_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -85,40 +86,61 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
-                if (state is LoginWithEmailAndPasswordError) {
+                if (state.loginState == RequestState.error) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: Colors.red,
                       content: SmallTextWidget(
-                        state.message,
+                        state.loginErrorMessage,
                         maxLines: null,
                         overflow: TextOverflow.visible,
                       ),
                     ),
                   );
-                  log('Error Happen ${state.message}');
+                  log('Error Happen ${state.loginErrorMessage}');
                 }
               },
               builder: (context, state) {
-                if (state is LoginWithEmailAndPasswordLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  );
-                } else {
-                  return ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        BlocProvider.of<AuthBloc>(context).add(
-                          LoginWithEmailAndPasswordEvent(
-                            _emailController.text,
-                            _passwordController.text,
-                          ),
-                        );
-                      }
-                    },
-                    child: const SmallTextWidget('Login'),
-                  );
+                switch (state.loginState) {
+                  case RequestState.loading:
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    );
+                  case RequestState.loaded:
+                  case RequestState.error:
+                    return ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          BlocProvider.of<AuthBloc>(context).add(
+                            LoginWithEmailAndPasswordEvent(
+                              _emailController.text,
+                              _passwordController.text,
+                            ),
+                          );
+                        }
+                      },
+                      child: const SmallTextWidget('Login'),
+                    );
                 }
+                // if (state is LoginWithEmailAndPasswordLoading) {
+                // return const Center(
+                //   child: CircularProgressIndicator.adaptive(),
+                // );
+                // } else {
+                // return ElevatedButton(
+                //   onPressed: () {
+                //     if (_formKey.currentState!.validate()) {
+                //       BlocProvider.of<AuthBloc>(context).add(
+                //         LoginWithEmailAndPasswordEvent(
+                //           _emailController.text,
+                //           _passwordController.text,
+                //         ),
+                //       );
+                //     }
+                //   },
+                //   child: const SmallTextWidget('Login'),
+                // );
+                // }
               },
             ),
           ],
