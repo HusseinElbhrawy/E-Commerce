@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
       darkTheme: kDarkTheme,
       themeMode: ThemeMode.light,
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.homeRoute,
+      // initialRoute: Routes.layoutRoute,
+      // home: const OnBoardingScreen(),
     );
   }
 }

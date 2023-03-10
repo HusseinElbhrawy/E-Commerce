@@ -17,4 +17,5 @@ class AppColors {
   static const Color blue = Colors.blue;
   static const Color error = Colors.red;
   static const Color white = Colors.white;
+  static const Color transparent = Colors.transparent;
 }

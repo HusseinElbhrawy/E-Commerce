@@ -4,7 +4,15 @@ import '../../core/utils/app_colors.dart';
 
 ThemeData get kLightTheme => ThemeData(
       useMaterial3: true,
-      primaryColor: AppColors.primary,
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        shape: CircleBorder(),
+      ),
+
+      colorScheme: const ColorScheme.light(
+        primary: Colors.black,
+        secondary: Colors.black,
+      ),
+
       hintColor: AppColors.grey,
       brightness: Brightness.light,
       scaffoldBackgroundColor: Colors.grey.shade100,
@@ -12,11 +20,12 @@ ThemeData get kLightTheme => ThemeData(
       appBarTheme: const AppBarTheme(
         centerTitle: true,
         elevation: 0.0,
-        color: Colors.transparent,
+        color: Color.fromARGB(0, 138, 90, 90),
         titleTextStyle: TextStyle(
           color: Colors.black,
         ),
       ),
+
       //!TextTheme
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
