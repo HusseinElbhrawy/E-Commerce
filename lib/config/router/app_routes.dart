@@ -13,7 +13,7 @@ import '../../modules/splash/presentation/screens/on_boarding_screen.dart';
 import '../../modules/splash/presentation/screens/splash_screen.dart';
 
 class Routes {
-  static const String splashRoute = '/';
+  static const String splashRoute = '/splash';
   static const String onboardingRoute = '/onboarding';
   static const String loginRoute = '/login';
   static const String registersRoute = '/registers';

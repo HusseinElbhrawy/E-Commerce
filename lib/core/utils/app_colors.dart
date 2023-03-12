@@ -8,7 +8,7 @@ class AppColors {
   factory AppColors() => _instance;
 
   static HexColor background = HexColor('#1C1C23');
-  static HexColor primary = HexColor('#FF7966');
+  static const Color primary = black;
   static HexColor grey = HexColor('#353542');
   static HexColor darkGrey = HexColor('#353339');
   static HexColor lightGrey = HexColor('#4E4E61');

@@ -2,10 +2,18 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../../core/utils/constant.dart';
-import '../../../../../core/widgets/small_text_widget.dart';
+import '../../../../config/router/app_routes.dart';
+import '../../../../core/utils/app_assets.dart';
+import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/constant.dart';
+import '../../../../core/utils/dimensions.dart';
 import '../../../../core/utils/enums.dart';
+import '../../../../core/utils/fonts_manager.dart';
+import '../../../../core/utils/media_query_values.dart';
+import '../../../../core/widgets/big_text_widget.dart';
+import '../../../../core/widgets/small_text_widget.dart';
 import '../bloc/auth_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -30,13 +38,28 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
+      resizeToAvoidBottomInset: false,
       body: Form(
         key: _formKey,
-        child: Column(
+        child: ListView(
+          shrinkWrap: true,
+          padding: EdgeInsets.all(AppConstant.defaultPadding(context)),
           children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: AppDimensions.height45(context) * 2.5,
+                bottom: AppDimensions.height45(context),
+              ),
+              child: SvgPicture.asset(
+                AppSvgAssets.appLogo,
+              ),
+            ),
+            const BigTextWidget(
+              AppStrings.loginToYourAccount,
+              align: TextAlign.center,
+              fontWeight: AppFontsWeight.bold,
+            ),
+            SizedBox(height: AppDimensions.height45(context)),
             TextFormField(
               validator: (value) {
                 if (value!.isEmpty) {
@@ -77,13 +100,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: TextButton(
-                onPressed: () {},
-                child: const SmallTextWidget('Reset Password?'),
-              ),
+            AppConstant.horizontalDivider(),
+            Row(
+              children: [
+                Checkbox(
+                  value: true,
+                  onChanged: (value) {},
+                  shape: ContinuousRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+                const SmallTextWidget('Remember me'),
+              ],
             ),
+            AppConstant.horizontalDivider(),
             BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state.loginState == RequestState.error) {
@@ -119,29 +149,36 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         }
                       },
-                      child: const SmallTextWidget('Login'),
+                      child: SmallTextWidget(
+                        'Login',
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
                     );
                 }
-                // if (state is LoginWithEmailAndPasswordLoading) {
-                // return const Center(
-                //   child: CircularProgressIndicator.adaptive(),
-                // );
-                // } else {
-                // return ElevatedButton(
-                //   onPressed: () {
-                //     if (_formKey.currentState!.validate()) {
-                //       BlocProvider.of<AuthBloc>(context).add(
-                //         LoginWithEmailAndPasswordEvent(
-                //           _emailController.text,
-                //           _passwordController.text,
-                //         ),
-                //       );
-                //     }
-                //   },
-                //   child: const SmallTextWidget('Login'),
-                // );
-                // }
               },
+            ),
+            AppConstant.horizontalDivider(),
+            Align(
+              alignment: AlignmentDirectional.center,
+              child: TextButton(
+                onPressed: () {},
+                child: const SmallTextWidget('Reset Password?'),
+              ),
+            ),
+            SizedBox(height: AppDimensions.height45(context) * 2),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SmallTextWidget('Don\'t have an account?'),
+                TextButton(
+                  onPressed: () {
+                    context.navigateToWithReplacementAndClearStack(
+                      Routes.registersRoute,
+                    );
+                  },
+                  child: const SmallTextWidget('Register'),
+                ),
+              ],
             ),
           ],
         ),

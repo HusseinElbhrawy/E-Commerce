@@ -100,11 +100,11 @@ ThemeData get kLightTheme => ThemeData(
           borderRadius: BorderRadius.circular(8),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
           borderRadius: BorderRadius.circular(8),
         ),
       ),
@@ -142,7 +142,9 @@ ThemeData get kLightTheme => ThemeData(
       //!ElevatedButtonTheme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
         ),
       ),
     );
