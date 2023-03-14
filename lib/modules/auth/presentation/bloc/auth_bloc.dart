@@ -2,8 +2,10 @@
 
 import 'dart:developer';
 
+import 'package:e_commerce_project/config/router/app_routes.dart';
 import 'package:e_commerce_project/modules/auth/domain/usecases/register_with_email_and_password.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/enums.dart';
@@ -23,15 +25,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) : super(const AuthState()) {
     on<AuthEvent>((event, emit) {});
     on<LoginWithEmailAndPasswordEvent>((event, emit) {
-      return _loginWithEmailAndPassword(event.email, event.password);
+      return _loginWithEmailAndPassword(
+          event.email, event.password, event.context);
     });
     on<RegisterWithEmailAndPasswordEvent>((event, emit) {
       return _registerWithEmailAndPassword(
-          event.email, event.password, event.phone, event.name);
+          event.email, event.password, event.phone, event.name, event.context);
     });
+    // on<IsUserLoggedInEvent>((event, emit) {
+    //   return _isUserLoggedIn();
+    // });
   }
 
-  void _loginWithEmailAndPassword(String email, String password) async {
+  void _loginWithEmailAndPassword(
+      String email, String password, BuildContext context) async {
     // emit(LoginWithEmailAndPasswordLoading());
     emit(state.copyWith(loginState: RequestState.loading));
 
@@ -51,6 +58,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         },
         (response) {
           log(response.toString());
+          Navigator.pushReplacementNamed(context, Routes.layoutRoute);
           return state.copyWith(loginState: RequestState.loaded);
           // return LoginWithEmailAndPasswordLoaded();
         },
@@ -63,6 +71,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     String password,
     String phone,
     String name,
+    BuildContext context,
   ) async {
     final registerParams = RegisterParams(
       email: email,
@@ -87,6 +96,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         },
         (response) {
           log(response.toString());
+          Navigator.pushReplacementNamed(context, Routes.layoutRoute);
+
           // return RegisterWithEmailAndPasswordLoaded();
           return state.copyWith(registerState: RequestState.loaded);
         },

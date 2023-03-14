@@ -9,6 +9,7 @@ import '../../modules/auth/presentation/screens/register_screen.dart';
 import '../../modules/home/presentation/bloc/home_bloc.dart';
 import '../../modules/home/presentation/screens/home_screen.dart';
 import '../../modules/home/presentation/screens/layout_screen.dart';
+import '../../modules/splash/presentation/bloc/splash_bloc.dart';
 import '../../modules/splash/presentation/screens/on_boarding_screen.dart';
 import '../../modules/splash/presentation/screens/splash_screen.dart';
 
@@ -30,11 +31,21 @@ class AppRoutes {
     switch (routeSettings.name) {
       case Routes.splashRoute:
         return MaterialPageRoute(
-          builder: (_) => const SplashScreen(),
+          builder: (_) => BlocProvider(
+            lazy: false,
+            create: (context) => serviceLocator<SplashBloc>()
+              ..add(
+                IsOnBoardingSkip(context),
+              ),
+            child: const SplashScreen(),
+          ),
         );
       case Routes.onboardingRoute:
         return MaterialPageRoute(
-          builder: (_) => const OnBoardingScreen(),
+          builder: (_) => BlocProvider.value(
+            value: serviceLocator<SplashBloc>(),
+            child: const OnBoardingScreen(),
+          ),
         );
 
       case Routes.loginRoute:

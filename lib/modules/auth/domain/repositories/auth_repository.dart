@@ -13,6 +13,7 @@ abstract class AuthRepository {
   Future<Either<Failure, Register>> registerWithEmailAndPassword(
     RegisterParams register,
   );
+  Future<Either<Failure, bool>> logout();
 }
 
 class LoginParams {

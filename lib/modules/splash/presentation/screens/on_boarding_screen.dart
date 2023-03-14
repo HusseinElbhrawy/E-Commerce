@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../../../config/router/app_routes.dart';
 import '../../../../core/utils/app_assets.dart';
 import '../../../../core/utils/constant.dart';
 import '../../../../core/utils/dimensions.dart';
@@ -11,6 +11,7 @@ import '../../../../core/utils/fonts_manager.dart';
 import '../../../../core/utils/media_query_values.dart';
 import '../../../../core/widgets/big_text_widget.dart';
 import '../../../../core/widgets/small_text_widget.dart';
+import '../bloc/splash_bloc.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
@@ -73,10 +74,11 @@ class _OnBoardingInformationWidgetState
                       backgroundColor: Colors.white10,
                     ),
                     onPressed: () {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        Routes.layoutRoute,
-                      );
+                      BlocProvider.of<SplashBloc>(context)
+                          .add(SkipOnBoardingEvent(context));
+                      // context
+                      //     .read<SplashBloc>()
+                      //     .add(SkipOnBoardingEvent(context));
                     },
                     child: SmallTextWidget(
                       'Skip',
@@ -161,10 +163,14 @@ class _OnBoardingInformationWidgetState
                           initProgressValue += (1 / 3);
                         });
                       } else {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          Routes.layoutRoute,
-                        );
+                        context
+                            .read<SplashBloc>()
+                            .add(SkipOnBoardingEvent(context));
+
+                        // Navigator.pushReplacementNamed(
+                        //   context,
+                        //   Routes.layoutRoute,
+                        // );
                       }
                     },
                     shape: const CircleBorder(),

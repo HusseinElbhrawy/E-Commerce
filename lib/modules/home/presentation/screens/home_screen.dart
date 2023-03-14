@@ -287,6 +287,7 @@ class HomeBody extends StatelessWidget {
       builder: (context, state) {
         log(state.toString(), error: state);
         switch (state.state) {
+          case RequestState.initial:
           case RequestState.loading:
             return const Center(
               child: CircularProgressIndicator.adaptive(),

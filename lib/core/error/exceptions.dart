@@ -51,3 +51,7 @@ class UnknownException extends ServerException {
 class BadCertificateException extends ServerException {
   const BadCertificateException([String? message]) : super('Bad Certificate');
 }
+
+class CachedException extends ServerException {
+  const CachedException([String? message]) : super('Cached Exception');
+}

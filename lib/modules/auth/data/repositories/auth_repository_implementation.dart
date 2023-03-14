@@ -2,31 +2,39 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 
+import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/network/network.dart';
 import '../../domain/entities/login.dart';
 import '../../domain/entities/register.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../datasources/auth_local_data_source.dart';
 import '../datasources/auth_remote_data_source.dart';
 
 class AuthRepositoryImplementation implements AuthRepository {
-  final AuthRemoteDataSource authRemoteDataSource;
-  final NetworkInformation networkInformation;
+  final AuthRemoteDataSource _authRemoteDataSource;
+  final NetworkInformation _networkInformation;
+  final AuthLocalDataSource _authLocalDataSource;
 
   AuthRepositoryImplementation(
-    this.authRemoteDataSource,
-    this.networkInformation,
+    this._authRemoteDataSource,
+    this._networkInformation,
+    this._authLocalDataSource,
   );
 
   @override
   Future<Either<Failure, Login>> loginWithEmailAndPassword(
     LoginParams login,
   ) async {
-    if (await networkInformation.isConnected) {
+    if (await _networkInformation.isConnected) {
       try {
         final result =
-            await authRemoteDataSource.loginWithEmailAndPassword(login);
+            await _authRemoteDataSource.loginWithEmailAndPassword(login);
         if (result.status == true) {
+          var cached =
+              await _authLocalDataSource.cacheLogin(result.data!.token);
+          log(cached.toString());
+
           return Right(result);
         } else {
           return Left(ServerFailure(result.message));
@@ -41,13 +49,17 @@ class AuthRepositoryImplementation implements AuthRepository {
   @override
   Future<Either<Failure, Register>> registerWithEmailAndPassword(
       RegisterParams register) async {
-    if (await networkInformation.isConnected) {
+    if (await _networkInformation.isConnected) {
       try {
         final result =
-            await authRemoteDataSource.registerWithEmailAndPassword(register);
+            await _authRemoteDataSource.registerWithEmailAndPassword(register);
         if (result.status == false) {
           return Left(ServerFailure(result.message));
         } else {
+          var cached =
+              await _authLocalDataSource.cacheLogin(result.data!.token);
+          log(cached.toString());
+
           return Right(result);
         }
       } catch (e) {
@@ -56,5 +68,18 @@ class AuthRepositoryImplementation implements AuthRepository {
       }
     }
     return const Left(NoInternetFailure());
+  }
+
+  @override
+  Future<Either<Failure, bool>> logout() async {
+    try {
+      final result = await _authLocalDataSource.cacheLogout();
+      return Right(result);
+    } on CachedException catch (error) {
+      return Left(CacheFailure(error.toString()));
+    } catch (e) {
+      log('Error in Auth Repo$e');
+      return Left(CacheFailure(e.toString()));
+    }
   }
 }

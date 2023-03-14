@@ -46,6 +46,8 @@ dependencies:
   smooth_page_indicator: ^1.0.1
   percent_indicator: ^4.2.3
   flashy_tab_bar2: ^0.0.6
+  shared_preferences: ^2.0.18
+  flutter_secure_storage: ^8.0.0
 
 dev_dependencies:
   flutter_test:

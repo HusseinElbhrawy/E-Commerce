@@ -132,6 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               builder: (context, state) {
                 switch (state.loginState) {
+                  case RequestState.initial:
                   case RequestState.loading:
                     return const Center(
                       child: CircularProgressIndicator.adaptive(),
@@ -145,6 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             LoginWithEmailAndPasswordEvent(
                               _emailController.text,
                               _passwordController.text,
+                              context,
                             ),
                           );
                         }
@@ -176,7 +178,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       Routes.registersRoute,
                     );
                   },
-                  child: const SmallTextWidget('Register'),
+                  child: const SmallTextWidget(
+                    'Register',
+                    fontWeight: AppFontsWeight.bold,
+                  ),
                 ),
               ],
             ),

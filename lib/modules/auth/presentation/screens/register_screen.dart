@@ -162,6 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           _passwordController.text,
                           _nameController.text,
                           _phoneController.text,
+                          context,
                         ),
                       );
                 }
@@ -219,6 +220,7 @@ class RegisterButtonWidget extends StatelessWidget {
       builder: (context, state) {
         log(state.toString());
         switch (state.registerState) {
+          case RequestState.initial:
           case RequestState.loading:
             return const Center(
               child: CircularProgressIndicator.adaptive(),

@@ -7,11 +7,11 @@ import '../repositories/auth_repository.dart';
 
 class RegisterWithEmailAndPasswordUsecase
     extends Usecase<Register, RegisterParams> {
-  final AuthRepository authRepository;
+  final AuthRepository _authRepository;
 
-  RegisterWithEmailAndPasswordUsecase(this.authRepository);
+  RegisterWithEmailAndPasswordUsecase(this._authRepository);
   @override
   Future<Either<Failure, Register>> call(RegisterParams params) async {
-    return await authRepository.registerWithEmailAndPassword(params);
+    return await _authRepository.registerWithEmailAndPassword(params);
   }
 }

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       darkTheme: kDarkTheme,
       themeMode: ThemeMode.light,
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: Routes.registersRoute,
+      initialRoute: Routes.splashRoute,
       // home: const LoginScreen(),
     );
   }
